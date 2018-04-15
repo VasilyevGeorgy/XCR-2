@@ -1,0 +1,5 @@
+gcc record4.cpp libportaudio.a -lrt -lm -lasound  -pthread -o record_mine -lstdc++
+gcc fft1.cpp libportaudio.a -lrt -lm -lasound  -pthread -o record -lstdc++ -lfftw3 -lm
+gcc fft2.cpp -o fft -lstdc++ -lfftw3 -lm
+gcc fft3.cpp -o fftback -lstdc++ -lfftw3 -lm
+
