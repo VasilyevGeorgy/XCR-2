@@ -8,7 +8,7 @@ import savgol_filter as sgf
 
 
 # Sound stream params
-CHUNK = 1024  # samples per buffer
+CHUNK = 512 #1024 samples per buffer
 FORMAT = pyaudio.paInt16  # bytes per sample
 CHANNELS = 1  # number of channels for micro
 RATE = 8000 #1024 * 8  # Sampling frequency; 44100 Hz is default
@@ -20,7 +20,7 @@ stream = pa.open(
     channels=CHANNELS,
     rate=RATE,
     input=True,
-    output=True,
+    output=False,
     frames_per_buffer=CHUNK#,
     #input_device_index=2
 )
