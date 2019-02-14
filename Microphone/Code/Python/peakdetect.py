@@ -73,7 +73,7 @@ def peakdet(v, delta, x=None):
 
     return array(maxtab), array(mintab)
 
-
+'''
 if __name__ == "__main__":
     from matplotlib.pyplot import plot, scatter, show
 
@@ -83,3 +83,4 @@ if __name__ == "__main__":
     scatter(array(maxtab)[:, 0], array(maxtab)[:, 1], color='blue')
     scatter(array(mintab)[:, 0], array(mintab)[:, 1], color='red')
     show()
+'''

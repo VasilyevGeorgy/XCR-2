@@ -7,7 +7,7 @@ Engineer's Guide to Digital Signal Processing Second Edition.
 
 """
 
-import pylab
+#import pylab
 import numpy
 
 def hamming(M):
@@ -60,7 +60,8 @@ def build_filter(M, fc, window=None):
     else:
         h = sinc_filter(M, fc)*window(M)
     return h/h.sum()
-
+    
+'''
 def main():
     f0 = 440 #20Hz
     ts = 1/8192 #1/2**13 # 0.01 i.e. sampling frequency is 1/ts = 100Hz
@@ -112,5 +113,6 @@ def main():
 
     pylab.show()
 
-#if __name__ == '__main__':
-#    main()
+if __name__ == '__main__':
+    main()
+'''

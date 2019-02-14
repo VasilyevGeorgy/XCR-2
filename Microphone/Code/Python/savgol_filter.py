@@ -1,8 +1,8 @@
 import numpy as np
-import pylab
+#import pylab
 import math
 
-def savgol1Dcoeff(order=2,nump=5):
+def savgol1Dcoeff(order=2,nump=5): # nump is window's lenght
     #variable
     z = np.arange(-(nump-1)/2,(nump+1)/2).reshape(-1,1)
     #Jacobian
@@ -16,10 +16,15 @@ def savgol1Dcoeff(order=2,nump=5):
     return c
 
 def savgolfilt(data,order=2,nump=5,h=2):
+    '''
+    args: data is data array, order is polynomial order (<nump),
+            nump is window's length (positive odd int), h is padding coefficient
+    '''
+
     savgolcoeff = savgol1Dcoeff(order,nump)
     #Since we need only the coeff a0
     coeff = savgolcoeff[0,:]
-    print (coeff)
+    #print (coeff)
     #padding the original data for taking the boundary values
     pad_length = math.ceil(h*(nump-1)/2)
     half_window = pad_length
@@ -33,6 +38,7 @@ def savgolfilt(data,order=2,nump=5,h=2):
         new_data[i-math.ceil(pad_length)] = np.sum(np.multiply(data_smooth,coeff))
     return new_data
 
+'''
 def main():
     f0 = 20 # Hz
     ts = 1/100 # sampling frequency is 1/ts = 8192Hz
@@ -50,3 +56,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+'''

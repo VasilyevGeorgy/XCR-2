@@ -1,16 +1,17 @@
 import pyaudio
 import numpy as np
-import matplotlib.pyplot as pyplot
+#import matplotlib.pyplot as pyplot
 
 import peakdetect
 import customfirwin_ as fir
+import savgol_filter as sgf
 
 
 # Sound stream params
 CHUNK = 1024  # samples per buffer
 FORMAT = pyaudio.paInt16  # bytes per sample
 CHANNELS = 1  # number of channels for micro
-RATE = 1024 * 8  # Sampling frequency; 44100 Hz is default
+RATE = 8000 #1024 * 8  # Sampling frequency; 44100 Hz is default
 
 pa = pyaudio.PyAudio()
 
@@ -20,8 +21,8 @@ stream = pa.open(
     rate=RATE,
     input=True,
     output=True,
-    frames_per_buffer=CHUNK
-    # input_device_index=5
+    frames_per_buffer=CHUNK#,
+    #input_device_index=2
 )
 
 nyq = RATE//2
@@ -35,7 +36,7 @@ shift = (np.cos(2 * np.pi * 0.5 * np.arange(M + 1)))
 ham_hp = ham_lp * shift
 black_hp = black_lp * shift
 
-
+'''
 # Create matplotlib figure and axes
 fig, (ax, ax2) = pyplot.subplots(2, figsize=(15, 7))
 # variables for plotting
@@ -55,7 +56,7 @@ pyplot.setp(ax.set_yticklabels(("-A","","A")))
 ax2.set_xlim(20, nyq)
 # show the plot
 pyplot.show(block=False)
-
+'''
 
 while True:
 
@@ -68,14 +69,16 @@ while True:
     f_ham = np.convolve(data_np, ham_hp)
     f_black = np.convolve(data_np, black_hp)
 
-    line.set_ydata(data_np)
+    #line.set_ydata(data_np)
 
     # FFT
     y_fft  = np.fft.fft(data_np)
     y_fft_ = np.fft.fft(fir.hamming(len(f_black))[:-1]*(f_black))
     #print(len(y_fft_))
-    gain_coeff = 1.5 # Gain for freqs values    1.5
+    gain_coeff = 1.55 # Gain for freqs values    1.5
     spec_data = np.abs(y_fft_[0:CHUNK] / CHUNK * 2)
+
+    spec_data = sgf.savgolfilt(spec_data, 3, 5, 1)
 
     #spec_data_ = [0]*int(nyq)
     #for i in range(len(spec_data)):
@@ -98,10 +101,10 @@ while True:
     print(list(maxs))
     #print(len(spec_data)*RATE/CHUNK)
 
-    line_fft.set_ydata(spec_data)
+    #line_fft.set_ydata(spec_data)
 
-    fig.canvas.draw()
-    fig.canvas.flush_events()
+    #fig.canvas.draw()
+    #fig.canvas.flush_events()
 
     #print(len(data_int))
     #print(list(data_int))
