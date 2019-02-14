@@ -1,0 +1,1 @@
+https://raspberrypi.stackexchange.com/questions/38756/real-time-audio-input-output-in-python-with-pyaudio?rq=1
