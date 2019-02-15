@@ -39,8 +39,8 @@ black_hp = black_lp * shift
 while True:
 
     # Get binary data
-    data = stream.read(CHUNK)
-    time.sleep(0.05)
+    data = stream.read(CHUNK, exception_on_overflow = False)
+    time.sleep(0.005)
     data_int = np.frombuffer(data, dtype=np.int16) # Convert data from buffer to int
     data_np = [(i/(2**14)) for i in data_int] # 16 bits = 2^16; first bit for sign; 2^15/2: from -(2^14) to 2^14
     f_ham = np.convolve(data_np, ham_hp)
@@ -49,11 +49,11 @@ while True:
     # FFT
     y_fft  = np.fft.fft(data_np)
     y_fft_ = np.fft.fft(fir.hamming(len(f_black))[:-1]*(f_black))
-    gain_coeff = 1.8 # Gain for freqs values    1.5
-    spec_data = np.abs(y_fft_[0:CHUNK] / CHUNK * 2)
+    gain_coeff = 10.0 # Gain for freqs values    1.5
+    spec_data = np.abs(y_fft_[0:CHUNK] / CHUNK * gain_coeff)
 
-    spec_data = sgf.savgolfilt(spec_data, 2, 5, 1)
-    maxs, mins = peakdetect.peakdet(spec_data, 0.03)
+    spec_data = sgf.savgolfilt(spec_data, 5, 7, 1)
+    maxs, mins = peakdetect.peakdet(spec_data, 0.085) # 0.035
 
     # Convert taps number in frequencies
     if (len(maxs) > 0):
@@ -62,6 +62,17 @@ while True:
             #maxs[0:len(maxs)][0] *= RATE/CHUNK
         maxs = maxs[:len(maxs) // 2] # Get first part of vector
 
+    flag = True
+    while(flag):
+        flag = False
+        for i in range (len(maxs)):
+            if (maxs[i][1]<0.7): # 0.5
+                maxs = np.delete(maxs,i,0)
+                flag = True
+                break
+
     if (len(maxs)>0):
         print(list(maxs))
+        print()
+
 

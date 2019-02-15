@@ -50,9 +50,11 @@ def main():
   # play tones forever    
   print("tone.main(): start playing tones")
   while True:
-    tone(440,4)
-    print(time.ctime())
-    #time.sleep(2)
+    tone(440,1)
+    #print(time.ctime())
+    time.sleep(2)
+    tone(880,1)
+    time.sleep(2)
 
 
 if __name__ == "__main__":
