@@ -61,7 +61,8 @@ while True:
             maxs[i][0] *= RATE/CHUNK*0.8
             #maxs[0:len(maxs)][0] *= RATE/CHUNK
         maxs = maxs[:len(maxs) // 2] # Get first part of vector
-
+    
+    #Delete peaks lower then threshold
     flag = True
     while(flag):
         flag = False
@@ -70,9 +71,39 @@ while True:
                 maxs = np.delete(maxs,i,0)
                 flag = True
                 break
+    
+    #Print peaks 
+    #if (len(maxs)>0):
+        #print(list(maxs))
 
-    if (len(maxs)>0):
-        print(list(maxs))
-        print()
+    red_check0 = False
+    red_check1 = False
+    blue_check0 = False
+    blue_check1 = False
 
+    for i in range(len(maxs)):
+        #Red check
+        if((maxs[i][0] > 510) and (maxs[i][0] < 640)
+           and (maxs[i][1] > 1.7)):
+            red_check0 = True
+        if(((maxs[i][0] > 1500 and maxs[i][0] < 1550) 
+            or (maxs[i][0] > 1750 and maxs[i][0] < 1850))
+            and maxs[i][1] > 1.2):
+            red_check1 = True
+        #Blue check
+        if((maxs[i][0] > 250) and (maxs[i][0] < 450) 
+           and (maxs[i][1] > 1.2)):
+            blue_check0 = True
+        if((maxs[i][0] > 1150) and (maxs[i][0] < 1450) 
+           and (maxs[i][1] > 1.2)): # 1.0
+            blue_check1 = True
 
+    if (red_check0 and red_check1):
+        print('RED')
+        print('')
+    elif (blue_check0 and blue_check1):
+        print('BLUE')
+        print('')
+
+    if (len(maxs) > 0 and not(red_check0 and red_check1) and not(blue_check0 and blue_check1)):
+        print('I hear something')
