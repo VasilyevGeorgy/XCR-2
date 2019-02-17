@@ -161,11 +161,9 @@ def main():
         time.sleep(0.1)
         data_int = np.frombuffer(data, dtype=np.int16) # Convert data from buffer to int
         data_np = [(i/(2**14)) for i in data_int] # 16 bits = 2^16; first bit for sign; 2^15/2: from -(2^14) to 2^14
-        f_ham = np.convolve(data_np, ham_hp)
         f_black = np.convolve(data_np, black_hp)
 
         # FFT
-        y_fft  = np.fft.fft(data_np)
         y_fft_ = np.fft.fft(fir.hamming(len(f_black))[:-1]*(f_black))
         gain_coeff = 10.0 # Gain for freqs values    10.0
         spec_data = np.abs(y_fft_[0:CHUNK] / CHUNK * gain_coeff)
